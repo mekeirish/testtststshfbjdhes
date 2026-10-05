@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#060913">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Electrocode">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Electrocode</title>
+<link rel="icon" id="faviconLink" href="#">
+<link rel="manifest" id="manifestLink" href="#">
+<style>
+:root{
+  --bg:#060913;
+  --card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.09);
+  --text:#e2e8f0; --text-muted:#94a3b8; --text-dim:#64748b;
+  --accent:#22d3ee; --accent-2:#a855f7;
+  --success:#22c55e; --warning:#fbbf24; --error:#ef4444;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{
+  -webkit-text-size-adjust:100%;
+  height:auto;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  overflow-y:auto;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 15%,rgba(34,211,238,0.10),transparent 45%),
+    radial-gradient(circle at 85% 85%,rgba(168,85,247,0.10),transparent 45%);
+  pointer-events:none;
+  z-index:0;
+}
+.container{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:100%;
+  margin:0 auto;
+  padding:calc(1rem + var(--safe-top)) calc(0.875rem + var(--safe-right))
+          calc(1.5rem + var(--safe-bottom)) calc(0.875rem + var(--safe-left));
+}
+.header{text-align:center;margin-bottom:1.25rem;padding:0 0.25rem}
+.header .logo{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:56px;height:56px;border-radius:1rem;
+  background:linear-gradient(135deg,rgba(34,211,238,0.15),rgba(168,85,247,0.15));
+  border:1px solid rgba(34,211,238,0.3);
+  margin-bottom:0.75rem;
+}
+.header .logo svg{width:28px;height:28px;color:var(--accent)}
+.header h1{
+  font-size:1.5rem;font-weight:800;letter-spacing:-0.03em;
+  background:linear-gradient(135deg,#e0f2fe 0%,var(--accent) 40%,var(--accent-2) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:0.3rem;line-height:1.1;
+}
+.header p{color:var(--text-muted);font-size:0.78rem;line-height:1.4;padding:0 1rem}
+.install-banner{
+  display:none;align-items:center;gap:0.7rem;
+  background:linear-gradient(135deg,rgba(34,211,238,0.1),rgba(168,85,247,0.1));
+  border:1px solid rgba(34,211,238,0.35);
+  border-radius:0.85rem;
+  padding:0.75rem 0.9rem;
+  margin-bottom:0.75rem;
+}
+.install-banner.show{display:flex}
+.install-banner .ib-text{flex:1;font-size:0.78rem;line-height:1.35}
+.install-banner .ib-text strong{color:var(--accent);display:block;font-size:0.82rem;margin-bottom:0.15rem}
+.install-banner button{
+  padding:0.55rem 0.9rem;border:none;border-radius:0.6rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#060913;font-weight:700;font-size:0.78rem;font-family:inherit;
+  cursor:pointer;flex-shrink:0;
+}
+.install-banner .ib-close{background:transparent;color:var(--text-dim);padding:0.35rem;font-size:1rem;border:none;cursor:pointer}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:1rem;
+  padding:1rem;
+  margin-bottom:0.75rem;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,0.35),transparent);
+}
+label{
+  display:flex;align-items:center;gap:0.4rem;
+  font-size:0.68rem;font-weight:700;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:0.1em;
+  margin-bottom:0.55rem;
+}
+input[type="text"],input[type="password"],textarea{
+  width:100%;padding:0.9rem 1rem;
+  background:rgba(0,0,0,0.4);
+  border:1px solid var(--border);
+  border-radius:0.75rem;
+  color:var(--text);
+  font-size:16px;font-family:inherit;
+  transition:all 0.2s;
+  min-height:48px;
+  -webkit-appearance:none;
+  appearance:none;
+}
+input[type="password"]{font-family:ui-monospace,monospace}
+input:focus,textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:rgba(0,0,0,0.55);
+  box-shadow:0 0 0 3px rgba(34,211,238,0.1);
+}
+input:disabled{opacity:0.4}
+input::placeholder,textarea::placeholder{color:var(--text-dim)}
+textarea{
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:13px;
+  line-height:1.55;
+  resize:vertical;
+  min-height:200px;
+  tab-size:2;
+}
+.note{
+  font-size:0.72rem;color:var(--text-muted);
+  background:rgba(34,211,238,0.04);
+  border-left:3px solid var(--accent);
+  padding:0.7rem 0.85rem;
+  border-radius:0.5rem;
+  line-height:1.55;
+  margin-top:0.85rem;
+}
+.note a{color:var(--accent);text-decoration:none;font-weight:600}
+.note code{
+  background:rgba(0,0,0,0.5);
+  padding:0.1rem 0.4rem;
+  border-radius:0.25rem;
+  font-family:ui-monospace,monospace;
+  font-size:0.68rem;
+  color:var(--accent);
+  font-weight:600;
+  word-break:break-all;
+}
+.hint{font-size:0.7rem;color:var(--text-dim);margin-top:0.55rem;line-height:1.5}
+.hint code{
+  background:rgba(34,211,238,0.1);
+  color:var(--accent);
+  padding:0.12rem 0.45rem;
+  border-radius:0.3rem;
+  font-family:ui-monospace,monospace;
+  font-size:0.68rem;
+  font-weight:600;
+}
+.tabs{
+  display:flex;gap:0.25rem;
+  margin-bottom:0.6rem;
+  background:rgba(0,0,0,0.3);
+  padding:0.25rem;
+  border-radius:0.6rem;
+}
+.tab-btn{
+  flex:1;
+  padding:0.55rem 0.5rem;
+  background:transparent;
+  border:none;
+  color:var(--text-muted);
+  font-size:0.75rem;
+  font-weight:700;
+  font-family:inherit;
+  border-radius:0.45rem;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.tab-btn.active{background:rgba(34,211,238,0.12);color:var(--accent)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.user-chip{
+  display:inline-flex;align-items:center;gap:0.45rem;
+  padding:0.4rem 0.8rem;
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.3);
+  border-radius:9999px;
+  font-size:0.72rem;
+  color:var(--success);
+  font-weight:600;
+  margin-top:0.75rem;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.user-chip .pulse{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--success);
+  box-shadow:0 0 8px var(--success);
+  flex-shrink:0;
+}
+.user-chip.error{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.3);color:var(--error)}
+.user-chip.error .pulse{background:var(--error)}
+details.advanced summary{
+  cursor:pointer;
+  font-size:0.75rem;
+  font-weight:700;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  list-style:none;
+}
+details.advanced summary::-webkit-details-marker{display:none}
+details.advanced summary::before{content:'\25B8 ';display:inline-block}
+details.advanced[open] summary::before{content:'\25BE '}
+.checkbox-row{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.78rem;color:var(--text-muted);
+  text-transform:none;letter-spacing:0;
+  margin-top:0.85rem;
+}
+.checkbox-row input[type="checkbox"]{
+  width:18px;height:18px;
+  accent-color:var(--accent);
+  cursor:pointer;
+}
+.steps{display:flex;flex-direction:column;gap:0.4rem}
+.step{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.7rem 0.85rem;
+  background:rgba(0,0,0,0.25);
+  border:1px solid var(--border);
+  border-radius:0.7rem;
+  font-size:0.8rem;
+  transition:all 0.3s;
+  min-height:48px;
+}
+.step.done{border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.04)}
+.step.running{border-color:rgba(251,191,36,0.35);background:rgba(251,191,36,0.04)}
+.step.error{border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.04)}
+.step.skipped{opacity:0.4}
+.led{
+  width:10px;height:10px;border-radius:50%;
+  background:#334155;flex-shrink:0;
+  transition:all 0.3s;
+}
+.led[data-state="running"]{background:var(--warning);box-shadow:0 0 10px var(--warning)}
+.led[data-state="done"]{background:var(--success);box-shadow:0 0 10px var(--success)}
+.led[data-state="error"]{background:var(--error);box-shadow:0 0 10px var(--error)}
+.step-label{flex:1;font-weight:500;font-size:0.8rem;line-height:1.3;min-width:0}
+.step-label code{
+  background:rgba(34,211,238,0.1);
+  color:var(--accent);
+  padding:0.05rem 0.35rem;
+  border-radius:0.25rem;
+  font-family:ui-monospace,monospace;
+  font-size:0.7rem;
+}
+.step.done .step-label{color:#86efac}
+.step.error .step-label{color:#fca5a5}
+.step-time{
+  font-size:0.65rem;
+  color:var(--text-dim);
+  font-family:ui-monospace,monospace;
+  font-weight:600;
+  flex-shrink:0;
+}
+.btn{
+  width:100%;
+  padding:1.05rem 1rem;
+  border:none;
+  border-radius:0.9rem;
+  font-size:1rem;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  transition:all 0.18s;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#060913;
+  margin-top:1.25rem;
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+}
+.btn:active:not(:disabled){transform:scale(0.98)}
+.btn:disabled{opacity:0.35;cursor:not-allowed}
+.log{
+  margin-top:0.85rem;
+  padding:0.85rem;
+  background:#030509;
+  border:1px solid var(--border);
+  border-radius:0.75rem;
+  font-family:ui-monospace,monospace;
+  font-size:0.68rem;
+  line-height:1.6;
+  color:#94a3b8;
+  max-height:40vh;
+  overflow-y:auto;
+  display:none;
+  word-break:break-word;
+}
+.log.show{display:block}
+.log .line{display:flex;gap:0.5rem;margin-bottom:0.15rem}
+.log .ts{color:#475569;flex-shrink:0}
+.log .msg{flex:1;word-break:break-word}
+.log .ok{color:#4ade80}
+.log .err{color:#f87171}
+.log .info{color:#22d3ee}
+.log .warn{color:#fbbf24}
+.log a{color:var(--accent)}
+.success-panel{
+  display:none;
+  background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(34,211,238,0.05));
+  border:1px solid rgba(34,197,94,0.35);
+  border-radius:1rem;
+  padding:1.25rem 1rem;
+  margin-top:1rem;
+  text-align:center;
+}
+.success-panel.show{display:block}
+.success-panel .check{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;height:48px;
+  border-radius:50%;
+  background:rgba(34,197,94,0.15);
+  border:2px solid var(--success);
+  margin-bottom:0.75rem;
+}
+.success-panel .check svg{width:24px;height:24px;color:var(--success)}
+.success-panel h3{color:#86efac;font-size:1.05rem;margin-bottom:0.35rem;font-weight:700}
+.success-panel p{color:var(--text-muted);font-size:0.8rem;margin-bottom:1rem;line-height:1.4;word-break:break-word}
+.download-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.55rem;
+  padding:1.05rem 1.25rem;
+  background:linear-gradient(135deg,var(--success),#16a34a);
+  color:#fff;
+  border-radius:0.85rem;
+  font-size:1rem;
+  font-weight:700;
+  text-decoration:none;
+  width:100%;
+  min-height:52px;
+  cursor:pointer;
+}
+.download-link:active{transform:scale(0.97)}
+.download-link svg{width:20px;height:20px;flex-shrink:0}
+.success-panel .alt-links{margin-top:0.85rem;font-size:0.7rem;color:var(--text-dim)}
+.success-panel .alt-links a{color:var(--text-muted);text-decoration:none;border-bottom:1px dotted var(--text-dim)}
+.info-help{
+  margin-top:0.75rem;
+  font-size:0.68rem;
+  color:var(--text-dim);
+  line-height:1.5;
+  word-break:break-word;
+}
+.info-help code{
+  color:var(--accent);
+  background:rgba(34,211,238,0.1);
+  padding:0.08rem 0.35rem;
+  border-radius:0.25rem;
+  font-size:0.66rem;
+}
+.footer{
+  text-align:center;
+  margin-top:1.5rem;
+  font-size:0.68rem;
+  color:var(--text-dim);
+  font-family:ui-monospace,monospace;
+  padding:0 0.5rem;
+}
+.footer .dot{
+  display:inline-block;
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--success);
+  box-shadow:0 0 6px var(--success);
+  margin:0 0.35rem;
+  vertical-align:middle;
+}
+.spinner{
+  display:inline-block;
+  width:9px;height:9px;
+  border:2px solid rgba(34,211,238,0.2);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (min-width:640px){
+  .container{
+    max-width:680px;
+    padding:calc(1.75rem + var(--safe-top)) calc(1.5rem + var(--safe-right))
+            calc(2rem + var(--safe-bottom)) calc(1.5rem + var(--safe-left));
+  }
+  .header h1{font-size:1.9rem}
+  .card{padding:1.5rem;border-radius:1.25rem}
+  textarea{min-height:280px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
+    <h1>Electrocode</h1>
+    <p>Colle ton code, obtiens un exe portable Windows</p>
+  </div>
+
+  <div class="install-banner" id="installBanner">
+    <div class="ib-text">
+      <strong>Installer Electrocode</strong>
+      Utilise l'app hors-ligne, en plein ecran.
+    </div>
+    <button id="installBtn">Installer</button>
+    <button class="ib-close" id="installClose" aria-label="Fermer">X</button>
+  </div>
+
+  <div class="card">
+    <label>Token GitHub</label>
+    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
+    <div class="note">
+      Cree un token sur <a href="https://github.com/settings/tokens/new?scopes=repo,workflow&amp;description=Electrocode" target="_blank" rel="noopener">github.com/settings/tokens/new</a>
+      avec les scopes <code>repo</code> et <code>workflow</code>.
+    </div>
+    <div id="userChip" class="user-chip" style="display:none;">
+      <span class="pulse"></span>
+      <span>Connecte : <strong id="userName">-</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>Ton code</label>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="html">HTML</button>
+      <button class="tab-btn" data-tab="css">CSS</button>
+      <button class="tab-btn" data-tab="js">JS</button>
+    </div>
+    <div class="tab-panel active" id="panel-html">
+      <textarea id="codeHtml" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    </div>
+    <div class="tab-panel" id="panel-css">
+      <textarea id="codeCss" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    </div>
+    <div class="tab-panel" id="panel-js">
+      <textarea id="codeJs" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    </div>
+    <div class="hint">Colle ton HTML complet. Le CSS et le JS seront automatiquement injectes.</div>
+  </div>
+
+  <details class="card advanced">
+    <summary>Options avancees</summary>
+    <div style="padding-top:0.85rem;">
+      <label>Nom du depot GitHub</label>
+      <input type="text" id="repoName" placeholder="electrocode-build-xxxx" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
+      <div class="hint">Laisse vide pour generer automatiquement.</div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="publicRepo" checked>
+        <span>Depot public (permet le telechargement direct sans auth)</span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="rememberToken" checked>
+        <span>Memoriser le token sur cet appareil</span>
+      </label>
+    </div>
+  </details>
+
+  <div class="card">
+    <label>Progression</label>
+
+    <div class="steps" id="steps">
+      <div class="step" data-step="auth"><span class="led" data-state="idle"></span><span class="step-label">Authentification GitHub</span><span class="step-time"></span></div>
+      <div class="step" data-step="repo"><span class="led" data-state="idle"></span><span class="step-label">Preparation du depot</span><span class="step-time"></span></div>
+      <div class="step" data-step="html"><span class="led" data-state="idle"></span><span class="step-label">Envoi app/index.html</span><span class="step-time"></span></div>
+      <div class="step" data-step="css"><span class="led" data-state="idle"></span><span class="step-label">Envoi app/style.css</span><span class="step-time"></span></div>
+      <div class="step" data-step="js"><span class="led" data-state="idle"></span><span class="step-label">Envoi app/script.js</span><span class="step-time"></span></div>
+      <div class="step" data-step="mainjs"><span class="led" data-state="idle"></span><span class="step-label">Injection main.js (Electron)</span><span class="step-time"></span></div>
+      <div class="step" data-step="package"><span class="led" data-state="idle"></span><span class="step-label">Injection package.json</span><span class="step-time"></span></div>
+      <div class="step" data-step="workflow"><span class="led" data-state="idle"></span><span class="step-label">Injection workflow GitHub Actions</span><span class="step-time"></span></div>
+      <div class="step" data-step="build"><span class="led" data-state="idle"></span><span class="step-label">Compilation</span><span class="step-time"></span></div>
+      <div class="step" data-step="ready"><span class="led" data-state="idle"></span><span class="step-label">Exe pret</span><span class="step-time"></span></div>
+    </div>
+
+    <button class="btn" id="go" disabled>Generer l'exe portable</button>
+
+    <div class="log" id="log"></div>
+
+    <div class="success-panel" id="successPanel">
+      <div class="check">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h3>Build termine !</h3>
+      <p id="successMsg">Ton exe portable est pret.</p>
+
+      <a class="download-link" id="downloadBtn" href="#" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4"/>
+        </svg>
+        <span>Telecharger l'exe</span>
+      </a>
+
+      <div class="alt-links">
+        <a id="actionsLink" href="#" target="_blank" rel="noopener">Voir le workflow GitHub</a>
+      </div>
+
+      <div class="info-help">
+        Le fichier sera telecharge en <code>.zip</code> - decompresse-le pour obtenir l'<code>.exe</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="dot"></span>
+    Laiche Brahim 2026 - PWA mono-fichier
+    <span class="dot"></span>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   Aucun chevron litteral dans tout ce script.
+   Les chevrons sont exprimes en echappement hexadecimal :
+   \x3C = chevron ouvrant, \x3E = chevron fermant, \x2F = slash
+   ============================================================ */
+
+var LT = '\x3C';
+var GT = '\x3E';
+var SL = '\x2F';
+var SC = LT + SL + 'script' + GT;
+
+function tag(name, content, attrs) {
+  var a = attrs ? ' ' + attrs : '';
+  return LT + name + a + GT + content + LT + SL + name + GT;
+}
+function span(cls, content) {
+  var a = cls ? ' class="' + cls + '"' : '';
+  return LT + 'span' + a + GT + content + LT + SL + 'span' + GT;
+}
+function code(content) { return tag('code', content); }
+function strong(content) { return tag('strong', content); }
+function br() { return LT + 'br' + GT; }
+function anchor(href, content, target) {
+  var t = target ? ' target="' + target + '"' : '';
+  return LT + 'a href="' + href + '"' + t + GT + content + LT + SL + 'a' + GT;
+}
+
+var RE_HTML_ROOT = new RegExp(LT + 'html[\\s' + GT + ']', 'i');
+var RE_CLOSE_HEAD = new RegExp(LT + SL + 'head' + GT, 'i');
+var RE_HEAD_TAG = new RegExp(LT + 'head[^' + GT + ']*' + GT, 'i');
+var RE_HTML_TAG = new RegExp(LT + 'html[^' + GT + ']*' + GT, 'i');
+var RE_CLOSE_BODY = new RegExp(LT + SL + 'body' + GT, 'i');
+
+/* ============================================================
+   MANIFEST + ICON INLINE
+   ============================================================ */
+(function initPWA() {
+  var svgIcon = LT + 'svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"' + GT
+    + LT + 'defs' + GT
+    + LT + 'linearGradient id="g" x1="0" y1="0" x2="1" y2="1"' + GT
+    + LT + 'stop offset="0" stop-color="#22d3ee"/' + GT
+    + LT + 'stop offset="1" stop-color="#a855f7"/' + GT
+    + LT + SL + 'linearGradient' + GT
+    + LT + SL + 'defs' + GT
+    + LT + 'rect width="512" height="512" rx="96" fill="#060913"/' + GT
+    + LT + 'path d="M290 60 L120 300 h110 l-30 152 190-240 H280 z" fill="url(#g)"/' + GT
+    + LT + SL + 'svg' + GT;
+
+  var iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+  document.getElementById('faviconLink').href = iconDataUrl;
+
+  var manifest = {
+    name: "Electrocode - Generateur d'exe portable",
+    short_name: 'Electrocode',
+    description: 'Colle ton code, obtiens un exe portable Windows via GitHub Actions',
+    start_url: location.href.split('#')[0].split('?')[0],
+    scope: './',
+    display: 'standalone',
+    orientation: 'portrait-primary',
+    background_color: '#060913',
+    theme_color: '#060913',
+    lang: 'fr',
+    icons: [
+      { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
+      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
+    ]
+  };
+
+  try {
+    var blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    document.getElementById('manifestLink').href = URL.createObjectURL(blob);
+  } catch (e) {
+    try {
+      document.getElementById('manifestLink').href =
+        'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+    } catch (err) {}
+  }
+})();
+
+/* ============================================================
+   INSTALL PROMPT
+   ============================================================ */
+var deferredPrompt = null;
+var installBanner = document.getElementById('installBanner');
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (sessionStorage.getItem('ec_install_dismissed') === '1') return;
+  installBanner.classList.add('show');
+});
+
+document.getElementById('installBtn').addEventListener('click', function() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(choice) {
+    deferredPrompt = null;
+    installBanner.classList.remove('show');
+    if (choice.outcome === 'accepted') log('Application installee', 'ok');
+  });
+});
+
+document.getElementById('installClose').addEventListener('click', function() {
+  installBanner.classList.remove('show');
+  sessionStorage.setItem('ec_install_dismissed', '1');
+});
+
+window.addEventListener('appinstalled', function() {
+  installBanner.classList.remove('show');
+  deferredPrompt = null;
+});
+
+/* ============================================================
+   Utilitaires
+   ============================================================ */
+function $(id) { return document.getElementById(id); }
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+function toBase64(str) {
+  var bytes = new TextEncoder().encode(str);
+  var bin = '';
+  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function fmtTime() { return new Date().toTimeString().slice(0, 8); }
+
+/* ============================================================
+   Log terminal
+   ============================================================ */
+var logEl = $('log');
+function log(msg, cls) {
+  cls = cls || '';
+  logEl.classList.add('show');
+  var line = document.createElement('div');
+  line.className = 'line';
+  line.innerHTML = span('ts', '[' + fmtTime() + ']') + span('msg ' + cls, msg);
+  logEl.appendChild(line);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+/* ============================================================
+   Steps / LEDs
+   ============================================================ */
+function setStep(name, state, extra) {
+  extra = extra || '';
+  var step = document.querySelector('.step[data-step="' + name + '"]');
+  if (!step) return;
+  step.classList.remove('done', 'running', 'error', 'skipped');
+  step.querySelector('.led').setAttribute('data-state', state);
+  var timeEl = step.querySelector('.step-time');
+
+  if (state === 'running') {
+    step.classList.add('running');
+    timeEl.innerHTML = span('spinner', '');
+  } else if (state === 'done') {
+    step.classList.add('done');
+    timeEl.textContent = fmtTime();
+  } else if (state === 'error') {
+    step.classList.add('error');
+    timeEl.textContent = 'X';
+  } else if (state === 'skipped') {
+    step.classList.add('skipped');
+    timeEl.textContent = '-';
+  } else {
+    timeEl.textContent = '';
+  }
+  if (extra) step.querySelector('.step-label').innerHTML = extra;
+}
+
+function resetSteps() {
+  document.querySelectorAll('.step').forEach(function(s) {
+    s.classList.remove('done', 'running', 'error', 'skipped');
+    s.querySelector('.led').setAttribute('data-state', 'idle');
+    s.querySelector('.step-time').textContent = '';
+  });
+  $('successPanel').classList.remove('show');
+  logEl.innerHTML = '';
+  logEl.classList.remove('show');
+}
+
+/* ============================================================
+   GitHub API
+   ============================================================ */
+async function gh(method, path, token, body) {
+  var headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  if (body) headers['Content-Type'] = 'application/json';
+
+  var res = await fetch('https://api.github.com' + path, {
+    method: method,
+    headers: headers,
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) {
+    var detail = '';
+    try { detail = (await res.json()).message || ''; } catch (e) {}
+    var err = new Error(res.status + ' ' + (detail || res.statusText));
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+}
+
+/* ============================================================
+   Etat global
+   ============================================================ */
+var state = {
+  token: null, login: null, owner: null, repo: null,
+  html: '', css: '', js: '', artifact: null, run: null
+};
+
+/* ============================================================
+   Persistance
+   ============================================================ */
+var LS = {
+  token: 'ec_token', repo: 'ec_repo', html: 'ec_html',
+  css: 'ec_css', js: 'ec_js', remember: 'ec_remember'
+};
+
+function loadSaved() {
+  var remember = localStorage.getItem(LS.remember) !== 'false';
+  $('rememberToken').checked = remember;
+  if (remember) {
+    var t = localStorage.getItem(LS.token);
+    if (t) $('token').value = t;
+  }
+  $('repoName').value = localStorage.getItem(LS.repo) || '';
+  $('codeHtml').value = localStorage.getItem(LS.html) || '';
+  $('codeCss').value = localStorage.getItem(LS.css) || '';
+  $('codeJs').value = localStorage.getItem(LS.js) || '';
+}
+
+function persist() {
+  var remember = $('rememberToken').checked;
+  localStorage.setItem(LS.remember, remember ? 'true' : 'false');
+  if (remember && $('token').value.trim()) {
+    localStorage.setItem(LS.token, $('token').value.trim());
+  } else {
+    localStorage.removeItem(LS.token);
+  }
+  localStorage.setItem(LS.repo, $('repoName').value.trim());
+  localStorage.setItem(LS.html, $('codeHtml').value);
+  localStorage.setItem(LS.css, $('codeCss').value);
+  localStorage.setItem(LS.js, $('codeJs').value);
+}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    $('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============================================================
+   Verification token
+   ============================================================ */
+async function verifyToken() {
+  var token = $('token').value.trim();
+  var chip = $('userChip');
+
+  if (!token) {
+    chip.style.display = 'none';
+    state.token = null; state.owner = null; state.login = null;
+    checkReady();
+    return;
+  }
+  if (token === state.token) return;
+
+  chip.style.display = 'inline-flex';
+  chip.classList.remove('error');
+  $('userName').textContent = 'Verification...';
+
+  try {
+    var user = await gh('GET', '/user', token);
+    state.token = token;
+    state.login = user.login;
+    state.owner = user.login;
+    $('userName').textContent = user.login;
+    log('Connecte en tant que ' + strong(user.login), 'ok');
+    persist();
+  } catch (e) {
+    chip.classList.add('error');
+    $('userName').textContent = 'Token invalide';
+    state.token = null; state.owner = null;
+    log('Token invalide : ' + e.message, 'err');
+  }
+  checkReady();
+}
+
+function checkReady() {
+  var htmlOk = $('codeHtml').value.trim().length > 0;
+  $('go').disabled = !(state.token && state.owner && htmlOk);
+}
+
+/* ============================================================
+   Templates Electron
+   ============================================================ */
+function tplMainJs() {
+  return [
+    "const path = require('path');",
+    "const fs = require('fs');",
+    "const { app, BrowserWindow, Menu, session } = require('electron');",
+    "",
+    "app.commandLine.appendSwitch('disable-features', 'ServiceWorker');",
+    "",
+    "let baseDir;",
+    "if (process.env.PORTABLE_EXECUTABLE_DIR) {",
+    "  baseDir = process.env.PORTABLE_EXECUTABLE_DIR;",
+    "} else if (process.env.PORTABLE_EXECUTABLE_FILE) {",
+    "  baseDir = path.dirname(process.env.PORTABLE_EXECUTABLE_FILE);",
+    "} else if (app.isPackaged) {",
+    "  baseDir = path.dirname(app.getPath('exe'));",
+    "} else {",
+    "  baseDir = __dirname;",
+    "}",
+    "",
+    "const dataDir = path.join(baseDir, 'data');",
+    "try { fs.mkdirSync(dataDir, { recursive: true }); } catch (e) {}",
+    "",
+    "app.setPath('userData', dataDir);",
+    "app.setPath('sessionData', dataDir);",
+    "app.setPath('cache', path.join(dataDir, 'cache'));",
+    "app.setPath('logs', path.join(dataDir, 'logs'));",
+    "",
+    "function hardClean() {",
+    "  ['Service Worker','Cache','Code Cache','GPUCache','Cache Storage','Session Storage','blob_storage'].forEach(function(name) {",
+    "    const p = path.join(dataDir, name);",
+    "    try { if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true }); } catch (e) {}",
+    "  });",
+    "}",
+    "",
+    "let mainWindow;",
+    "function createWindow() {",
+    "  mainWindow = new BrowserWindow({",
+    "    width: 1100, height: 800, minWidth: 400, minHeight: 500,",
+    "    title: 'Electrocode',",
+    "    autoHideMenuBar: true,",
+    "    backgroundColor: '#0f172a',",
+    "    webPreferences: { contextIsolation: true, nodeIntegration: false }",
+    "  });",
+    "  mainWindow.loadFile(path.join(__dirname, 'app', 'index.html'));",
+    "  mainWindow.on('closed', function() { mainWindow = null; });",
+    "}",
+    "",
+    "function buildMenu() {",
+    "  Menu.setApplicationMenu(Menu.buildFromTemplate([",
+    "    { label: 'Fichier', submenu: [{ role: 'reload' }, { type: 'separator' }, { role: 'quit' }]},",
+    "    { label: 'Edition', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }]},",
+    "    { label: 'Affichage', submenu: [{ role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'resetZoom' }, { type: 'separator' }, { role: 'togglefullscreen' }, { role: 'toggleDevTools' }]}",
+    "  ]));",
+    "}",
+    "",
+    "app.whenReady().then(async function() {",
+    "  hardClean();",
+    "  try { await session.defaultSession.clearStorageData({ storages: ['serviceworkers','cachestorage','cookies','shadercache'] }); } catch (e) {}",
+    "  buildMenu();",
+    "  createWindow();",
+    "  app.on('activate', function() { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });",
+    "});",
+    "",
+    "app.on('window-all-closed', function() { if (process.platform !== 'darwin') app.quit(); });"
+  ].join('\n');
+}
+
+function tplPackageJson(repoName) {
+  return JSON.stringify({
+    name: repoName.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+    version: '1.0.0',
+    description: 'Electrocode portable build',
+    main: 'main.js',
+    author: 'Laiche Brahim',
+    license: 'MIT',
+    private: true,
+    scripts: {
+      start: 'electron .',
+      build: 'electron-builder --win portable --ia32'
+    },
+    devDependencies: {
+      electron: '^33.0.0',
+      'electron-builder': '^25.1.8'
+    },
+    build: {
+      appId: 'com.laichebrahim.electrocode',
+      productName: 'Electrocode',
+      directories: { output: 'dist' },
+      files: ['main.js', 'app/**/*'],
+      win: {
+        target: [{ target: 'portable', arch: ['ia32'] }],
+        artifactName: 'Electrocode-${version}-portable.${ext}'
+      },
+      portable: { requestExecutionLevel: 'user' },
+      compression: 'maximum',
+      asar: true
+    }
+  }, null, 2);
+}
+
+function tplWorkflow() {
+  return [
+    'name: Build EXE',
+    '',
+    'on:',
+    '  push:',
+    '    branches: [main, master]',
+    '  workflow_dispatch:',
+    '',
+    'jobs:',
+    '  build:',
+    '    runs-on: windows-latest',
+    '    steps:',
+    '      - name: Checkout',
+    '        uses: actions/checkout@v4',
+    '',
+    '      - name: Setup Node.js',
+    '        uses: actions/setup-node@v4',
+    '        with:',
+    "          node-version: '20'",
+    '',
+    '      - name: Install dependencies',
+    '        run: npm install',
+    '',
+    '      - name: Build portable EXE',
+    '        run: npm run build',
+    '',
+    '      - name: Upload artifact',
+    '        uses: actions/upload-artifact@v4',
+    '        with:',
+    '          name: Electrocode-portable',
+    '          path: dist/*.exe',
+    '          retention-days: 30',
+    ''
+  ].join('\n');
+}
+
+/* ============================================================
+   Injection CSS/JS dans le HTML utilisateur
+   ============================================================ */
+function buildAppHtml(html, css, js) {
+  var out = html.trim();
+
+  if (!RE_HTML_ROOT.test(out)) {
+    out = LT + '!DOCTYPE html' + GT
+        + '\n' + LT + 'html lang="fr"' + GT
+        + '\n' + LT + 'head' + GT
+        + '\n' + LT + 'meta charset="UTF-8"' + GT
+        + '\n' + LT + 'meta name="viewport" content="width=device-width, initial-scale=1.0"' + GT
+        + '\n' + LT + 'title' + GT + 'App' + LT + SL + 'title' + GT
+        + '\n' + LT + SL + 'head' + GT
+        + '\n' + LT + 'body' + GT
+        + '\n' + out
+        + '\n' + LT + SL + 'body' + GT
+        + '\n' + LT + SL + 'html' + GT;
+  }
+
+  if (css && css.trim()) {
+    var linkEl = LT + 'link rel="stylesheet" href="style.css"' + GT;
+    if (RE_CLOSE_HEAD.test(out)) {
+      out = out.replace(RE_CLOSE_HEAD, '  ' + linkEl + '\n' + LT + SL + 'head' + GT);
+    } else if (RE_HEAD_TAG.test(out)) {
+      out = out.replace(RE_HEAD_TAG, function(m) { return m + '\n' + linkEl; });
+    } else if (RE_HTML_TAG.test(out)) {
+      out = out.replace(RE_HTML_TAG, function(m) {
+        return m + '\n' + LT + 'head' + GT + linkEl + LT + SL + 'head' + GT;
+      });
+    }
+  }
+
+  if (js && js.trim()) {
+    var st = LT + 'script src="script.js"' + GT + SC;
+    if (RE_CLOSE_BODY.test(out)) {
+      out = out.replace(RE_CLOSE_BODY, '  ' + st + '\n' + LT + SL + 'body' + GT);
+    } else {
+      out += '\n' + st;
+    }
+  }
+
+  return out;
+}
+
+/* ============================================================
+   Upsert fichier
+   ============================================================ */
+async function upsertFile(path, content, message) {
+  var sha = null;
+  try {
+    var existing = await gh('GET', '/repos/' + state.owner + '/' + state.repo + '/contents/' + path, state.token);
+    sha = existing.sha;
+  } catch (e) {}
+
+  var body = { message: message, content: toBase64(content) };
+  if (sha) body.sha = sha;
+  return gh('PUT', '/repos/' + state.owner + '/' + state.repo + '/contents/' + path, state.token, body);
+}
+
+/* ============================================================
+   Attente du workflow
+   ============================================================ */
+async function waitForWorkflow(pushTimeMs) {
+  log('Recherche du workflow...', 'info');
+
+  var run = null;
+  for (var i = 0; i < 40; i++) {
+    await sleep(3000);
+    var data = await gh('GET', '/repos/' + state.owner + '/' + state.repo + '/actions/runs?per_page=10', state.token);
+    var candidates = data.workflow_runs.filter(function(r) {
+      return new Date(r.created_at).getTime() >= pushTimeMs - 60000;
+    });
+    if (candidates.length) {
+      run = candidates[0];
+      break;
+    }
+  }
+  if (!run) throw new Error('Workflow non detecte apres 2 minutes');
+
+  log('Workflow lance : ' + anchor(run.html_url, '#' + run.run_number, '_blank'), 'info');
+
+  var lastStatus = '';
+  var startedAt = Date.now();
+  var maxWait = 20 * 60 * 1000;
+
+  while (Date.now() - startedAt < maxWait) {
+    var r = await gh('GET', '/repos/' + state.owner + '/' + state.repo + '/actions/runs/' + run.id, state.token);
+
+    if (r.status !== lastStatus) {
+      lastStatus = r.status;
+      var labels = {
+        queued: 'En attente',
+        in_progress: 'Compilation...',
+        completed: r.conclusion === 'success' ? 'Termine' : 'Echec'
+      };
+      setStep('build', 'running', 'Compilation ' + span('', labels[r.status] || r.status));
+    }
+
+    if (r.status === 'completed') {
+      if (r.conclusion !== 'success') {
+        throw new Error('Build ' + r.conclusion + ' - voir ' + run.html_url);
+      }
+      var arts = await gh('GET', '/repos/' + state.owner + '/' + state.repo + '/actions/runs/' + run.id + '/artifacts', state.token);
+      if (!arts.artifacts.length) throw new Error('Aucun artefact genere');
+      return { run: r, artifact: arts.artifacts[0] };
+    }
+
+    await sleep(8000);
+  }
+  throw new Error('Timeout : build trop long');
+}
+
+function defaultRepoName() {
+  var rand = Math.random().toString(36).slice(2, 8);
+  return 'electrocode-build-' + rand;
+}
+
+/* ============================================================
+   Orchestration
+   ============================================================ */
+$('go').addEventListener('click', async function() {
+  var btn = $('go');
+  btn.disabled = true;
+  resetSteps();
+
+  var t0 = Date.now();
+
+  try {
+    setStep('auth', 'running');
+    await sleep(200);
+    if (!state.token) throw new Error('Token manquant');
+    setStep('auth', 'done');
+    log('Authentifie : ' + strong(state.owner), 'ok');
+
+    var repoName = ($('repoName').value.trim() || defaultRepoName())
+      .toLowerCase().replace(/[^a-z0-9-_.]/g, '-').slice(0, 90);
+    state.repo = repoName;
+    $('repoName').value = repoName;
+    persist();
+    log('Depot cible : ' + code(state.owner + '/' + repoName), 'info');
+
+    setStep('repo', 'running');
+    var isPublic = $('publicRepo').checked;
+    var exists = false;
+    try {
+      await gh('GET', '/repos/' + state.owner + '/' + repoName, state.token);
+      exists = true;
+      log('Depot existant detecte', 'info');
+    } catch (e) {
+      if (e.status !== 404) throw e;
+    }
+
+    if (!exists) {
+      log('Creation du depot...', 'info');
+      await gh('POST', '/user/repos', state.token, {
+        name: repoName,
+        private: !isPublic,
+        auto_init: true,
+        description: 'Electrocode portable build'
+      });
+      log('Depot cree', 'ok');
+      for (var w = 0; w < 15; w++) {
+        await sleep(1500);
+        try {
+          var rr = await gh('GET', '/repos/' + state.owner + '/' + repoName, state.token);
+          if (rr.default_branch) break;
+        } catch (e) {}
+      }
+      await sleep(2000);
+    }
+    setStep('repo', 'done');
+
+    var appHtml = buildAppHtml($('codeHtml').value, $('codeCss').value, $('codeJs').value);
+
+    setStep('html', 'running');
+    await upsertFile('app/index.html', appHtml, 'Add app/index.html');
+    setStep('html', 'done');
+    log(code('app/index.html') + ' pousse', 'ok');
+
+    var cssContent = $('codeCss').value;
+    if (cssContent.trim()) {
+      setStep('css', 'running');
+      await upsertFile('app/style.css', cssContent, 'Add app/style.css');
+      setStep('css', 'done');
+      log(code('app/style.css') + ' pousse', 'ok');
+    } else {
+      setStep('css', 'skipped');
+      log('CSS vide - ignore', 'warn');
+    }
+
+    var jsContent = $('codeJs').value;
+    if (jsContent.trim()) {
+      setStep('js', 'running');
+      await upsertFile('app/script.js', jsContent, 'Add app/script.js');
+      setStep('js', 'done');
+      log(code('app/script.js') + ' pousse', 'ok');
+    } else {
+      setStep('js', 'skipped');
+      log('JS vide - ignore', 'warn');
+    }
+
+    setStep('mainjs', 'running');
+    await upsertFile('main.js', tplMainJs(), 'Add Electron main.js');
+    setStep('mainjs', 'done');
+    log(code('main.js') + ' pousse', 'ok');
+
+    setStep('package', 'running');
+    await upsertFile('package.json', tplPackageJson(repoName), 'Add package.json');
+    setStep('package', 'done');
+    log(code('package.json') + ' pousse', 'ok');
+
+    var pushTimeMs = Date.now();
+    setStep('workflow', 'running');
+    await upsertFile('.github/workflows/build.yml', tplWorkflow(), 'Add GitHub Actions workflow');
+    setStep('workflow', 'done');
+    log('Workflow pousse - declenchement du build...', 'ok');
+
+    setStep('build', 'running', 'Compilation - demarrage');
+    var result = await waitForWorkflow(pushTimeMs);
+    var run = result.run;
+    var artifact = result.artifact;
+    setStep('build', 'done');
+    log('Build termine en ' + Math.round((Date.now() - t0) / 1000) + 's', 'ok');
+
+    state.artifact = artifact;
+    state.run = run;
+
+    setStep('ready', 'running');
+
+    var nightlyUrl = 'https://nightly.link/' + state.owner + '/' + repoName + '/actions/runs/' + run.id + '/' + artifact.name + '.zip';
+    $('actionsLink').href = run.html_url;
+    $('downloadBtn').href = nightlyUrl;
+    $('successMsg').innerHTML = strong(artifact.name) + br()
+      + span('', (artifact.size_in_bytes / 1024 / 1024).toFixed(1) + ' Mo');
+
+    setTimeout(function() {
+      setStep('ready', 'done');
+      $('successPanel').classList.add('show');
+      $('successPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      log('Exe pret a telecharger', 'ok');
+    }, 400);
+
+  } catch (e) {
+    log('Erreur : ' + e.message, 'err');
+    document.querySelectorAll('.step.running').forEach(function(s) {
+      s.classList.remove('running');
+      s.classList.add('error');
+      s.querySelector('.led').setAttribute('data-state', 'error');
+      s.querySelector('.step-time').textContent = 'X';
+    });
+  } finally {
+    btn.disabled = false;
+    checkReady();
+  }
+});
+
+/* ============================================================
+   Declencheurs
+   ============================================================ */
+var tokenTimer = null;
+$('token').addEventListener('input', function() {
+  clearTimeout(tokenTimer);
+  tokenTimer = setTimeout(verifyToken, 700);
+});
+$('token').addEventListener('blur', verifyToken);
+
+['codeHtml', 'codeCss', 'codeJs', 'repoName'].forEach(function(id) {
+  $(id).addEventListener('input', function() { persist(); checkReady(); });
+});
+$('rememberToken').addEventListener('change', persist);
+
+/* Init */
+loadSaved();
+checkReady();
+if ($('token').value.trim()) verifyToken();
+</script>
+
+</body>
+</html>
